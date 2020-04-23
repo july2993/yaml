@@ -376,6 +376,19 @@ func (e *encoder) floatv(tag string, in reflect.Value) {
 	case "NaN":
 		s = ".nan"
 	}
+
+	needPadDecimal := true
+	for _, c := range s {
+		if c != '-' && (c < '0' || c > '9') {
+			needPadDecimal = false
+			break
+		}
+	}
+
+	if needPadDecimal {
+		s += ".0"
+	}
+
 	e.emitScalar(s, "", tag, yaml_PLAIN_SCALAR_STYLE)
 }
 
